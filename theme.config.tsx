@@ -2,12 +2,12 @@ import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>My Project</span>,
+  logo: <span>RunBro Docs</span>,
   project: {
-    link: 'https://github.com/shuding/nextra-docs-template',
+    link: 'https://github.com/orgs/RunBroHackaton/repositories',
   },
   chat: {
-    link: 'https://discord.com',
+    link: 'https://x.com/RunBro_',
   },
   docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
   footer: {
