@@ -7,7 +7,7 @@ const config: DocsThemeConfig = {
     link: 'https://github.com/orgs/RunBroHackaton/repositories',
   },
   chat: {
-    link: 'https://x.com/RunBro_',
+    link: 'https://discord.gg/GyXwCxZ8QE',
   },
   docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
   footer: {
