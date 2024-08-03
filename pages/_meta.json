@@ -1,7 +1,7 @@
 {
-  "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
+  "index": "What's RunBro?",
+  "smart-contracts": "Smart Contracts",
+  "front-end": "Front End",
   "about": {
     "title": "About",
     "type": "page"
