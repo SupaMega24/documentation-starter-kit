@@ -1,0 +1,55 @@
+# Escrow
+
+---
+
+## Escrow.sol
+
+### Overview
+The `Escrow` contract acts as an intermediary between buyers and sellers in the `MarketPlace` contract. It ensures that funds are securely held and only released to the seller upon successful completion of a transaction, preventing discrepancies between buyers and sellers.
+
+### Constructor
+```solidity
+constructor()
+```
+- **Description**: Initializes the contract without any parameters.
+
+### Mappings
+- `s_buyerToSellerPayment`: Maps buyer addresses to seller addresses and the payment amount.
+
+### Functions
+
+#### `updateBuyerPayment`
+```solidity
+function updateBuyerPayment(address _buyer, address _seller, uint256 _amount) public
+```
+- **Parameters**: 
+  - `_buyer`: The address of the buyer.
+  - `_seller`: The address of the seller.
+  - `_amount`: The amount of payment.
+- **Description**: Updates the payment amount from the buyer to the seller.
+
+#### `payToSeller`
+```solidity
+function payToSeller(address _seller) public
+```
+- **Parameters**: 
+  - `_seller`: The address of the seller.
+- **Description**: Transfers the payment amount from the escrow to the seller.
+
+#### `checkBuyerAndPayerRelation`
+```solidity
+function checkBuyerAndPayerRelation(address _buyer, address _seller) public view returns(uint256)
+```
+- **Parameters**: 
+  - `_buyer`: The address of the buyer.
+  - `_seller`: The address of the seller.
+- **Description**: Returns the payment amount between the buyer and the seller.
+
+### Fallback Function
+```solidity
+receive() external payable {}
+```
+- **Description**: Allows the contract to receive Ether.
+
+---
+

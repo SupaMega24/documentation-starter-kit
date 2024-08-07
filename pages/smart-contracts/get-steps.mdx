@@ -1,0 +1,104 @@
+# Google Steps API
+
+---
+
+## GoogleStepsApi.sol
+
+### Overview
+The `GoogleStepsApi` contract interacts with Chainlink Functions to fetch daily step count data from the Google Fit API. It stores and manages this data for users, and includes functionality for reward distribution based on the steps data.
+
+### Inheritance
+The contract inherits from:
+- `FunctionsClient`: Provides functionality to interact with Chainlink Functions.
+- `ConfirmedOwner`: Provides ownership control.
+
+### Constructor
+```solidity
+constructor(address _wethregistry) FunctionsClient(router) ConfirmedOwner(msg.sender)
+```
+- **Parameters**: 
+  - `_wethregistry`: Address of the WethRegistry contract.
+- **Description**: Initializes the contract by setting the WethRegistry address, contract creation time, and distribution timestamp.
+
+### Structs
+- **DailyStepsData**: Represents daily steps data with attributes like requester, data type, and steps count.
+
+### Mappings
+- `userStepsData`: Maps user addresses to their daily steps data.
+- `requestIdToAddress`: Maps request IDs to user addresses.
+- `hasUserFetchedData`: Tracks whether a user has fetched their data.
+- `totalStepsByAllUsersInSlotOnPreviousDay`: Maps slots to user addresses and their steps count.
+- `s_IsUserAlreadyLogin`: Tracks whether a user has already logged in for a specific day.
+
+### Events
+- `Response`: Emitted when a response is received from Chainlink Functions.
+- `DailyStepsDataRecorded`: Emitted when daily steps data is recorded.
+- `StepsFetched`: Emitted when steps data is fetched for a user.
+
+### Errors
+- `UnexpectedRequestID`: Thrown when an unexpected request ID is encountered.
+
+### Functions
+
+#### `getNext6PM`
+```solidity
+function getNext6PM(uint256 timestamp) public pure returns (uint256)
+```
+- **Parameters**: 
+  - `timestamp`: The current timestamp.
+- **Description**: Calculates the next 6 PM timestamp from the given timestamp.
+
+#### `updateRewardDistributionTime`
+```solidity
+function updateRewardDistributionTime() public
+```
+- **Description**: Updates the reward distribution time and resets user steps data.
+
+#### `getCurrentDayMidnightTimestamp`
+```solidity
+function getCurrentDayMidnightTimestamp() public view returns (uint256)
+```
+- **Description**: Returns the midnight timestamp of the current day.
+
+#### `getPreviousDayMidnightTimestamp`
+```solidity
+function getPreviousDayMidnightTimestamp() public view returns (uint256)
+```
+- **Description**: Returns the midnight timestamp of the previous day.
+
+#### `uintToString`
+```solidity
+function uintToString(uint256 _value) internal pure returns (string memory)
+```
+- **Parameters**: 
+  - `_value`: The unsigned integer to convert.
+- **Description**: Converts an unsigned integer to a string.
+
+#### `sendRequest`
+```solidity
+function sendRequest(string[] calldata args, string memory authToken) external returns (bytes32 requestId)
+```
+- **Parameters**: 
+  - `args`: Arguments for the request.
+  - `authToken`: Authorization token for the API.
+- **Description**: Sends a request to the external API to fetch steps data.
+
+#### `fulfillRequest`
+```solidity
+function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override
+```
+- **Parameters**: 
+  - `requestId`: The request ID.
+  - `response`: The response data.
+  - `err`: Any error data.
+- **Description**: Handles the response from the external API and records the steps data.
+
+### View Functions
+- `getAllDailyStepDataRecords()`: Returns all daily steps data records.
+- `func_userStepsData(address _account)`: Returns the steps data for a specific user.
+- `getAllDailyStepDataRecordOf_A_User()`: Returns all daily steps data records for a specific user.
+- `getLatestUserStepsData(address user)`: Returns the latest steps data for a specific user.
+- `getLastResponse()`: Returns the last response from the external API.
+
+---
+
