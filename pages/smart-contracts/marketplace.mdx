@@ -1,0 +1,186 @@
+# Marketplace
+
+---
+
+## MarketPlace.sol
+
+### Overview
+The `MarketPlace` contract facilitates the listing and purchasing of shoes using WETH and RunBroToken. It includes features for user and seller registration, mapping emails to steps and addresses, and managing orders and payments through escrow.
+
+### Inheritance
+The contract does not inherit from any other contracts but interacts with several imported contracts:
+- `WethRegistry`
+- `Escrow`
+- `RunBroToken`
+- `IWETH` (interface)
+
+### Constructor
+```solidity
+constructor(address _wethRegistry, address _weth, address payable _escrow, address _runbroToken)
+```
+- **Parameters**: 
+  - `_wethRegistry`: Address of the WethRegistry contract.
+  - `_weth`: Address of the WETH contract.
+  - `_escrow`: Address of the Escrow contract.
+  - `_runbroToken`: Address of the RunBroToken contract.
+- **Description**: Initializes the contract by setting the owner and linking the provided contract addresses.
+
+### Structs
+- **Shoe**: Represents a shoe with various attributes like id, name, brand, cost, etc.
+- **Order**: Represents an order with a timestamp and a `Shoe` struct.
+
+### Mappings
+- `s_shoes`: Maps shoe IDs to `Shoe` structs.
+- `s_isSoldOut`: Tracks whether a shoe is sold out.
+- `s_orders`: Maps user addresses to their orders.
+- `s_orderCount`: Tracks the number of orders per user.
+- `s_stepsByUserAtMoment`: Maps user addresses and timestamps to steps.
+- `s_emailToAddress`: Maps email hashes to addresses.
+- `s_emailToSteps`: Maps email hashes to steps.
+- `s_userInitiatedPurchase`: Tracks whether a user has initiated a purchase.
+- `s_userSelectedShoe`: Maps user addresses to selected shoe IDs.
+- `s_IsUserRegistred`: Tracks whether a user is registered.
+- `s_IsSellerRegistred`: Tracks whether a seller is registered.
+- `s_SellerKYC`: Maps seller addresses to their KYC information.
+- `s_userInSlot`: Maps user addresses to slot numbers.
+- `s_userHomeAddress`: Maps user addresses to home addresses.
+- `s_numberOfShoeIdsOwnerByUser`: Maps user addresses to arrays of shoe IDs they own.
+
+### Events
+- `Buy`: Emitted when a shoe is purchased.
+- `List`: Emitted when a shoe is listed.
+- `EmailToAddressMapped`: Emitted when an email is mapped to an address.
+- `EmailToStepsMapped`: Emitted when an email is mapped to steps.
+
+### Modifiers
+- `onlyOwner`: Ensures the caller is the contract owner.
+- `shoeValidity`: Ensures the shoe is not sold out.
+
+### Functions
+
+#### `mapEmailToSteps`
+```solidity
+function mapEmailToSteps(string calldata _email, uint256 _steps) external
+```
+- **Parameters**: 
+  - `_email`: The email to map.
+  - `_steps`: The number of steps to map.
+- **Description**: Maps an email to the number of steps covered.
+
+#### `mapEmailToAddress`
+```solidity
+function mapEmailToAddress(string calldata _email, address _account) external
+```
+- **Parameters**: 
+  - `_email`: The email to map.
+  - `_account`: The Ethereum address to map.
+- **Description**: Maps an email to an Ethereum address.
+
+#### `_stringToHash`
+```solidity
+function _stringToHash(string memory _string) internal pure returns (bytes32)
+```
+- **Parameters**: 
+  - `_string`: The string to hash.
+- **Description**: Converts a string to a hash.
+
+#### `linkAddressToSteps`
+```solidity
+function linkAddressToSteps(string calldata _email, address _account, uint256 _steps) public
+```
+- **Parameters**: 
+  - `_email`: The email to link.
+  - `_account`: The Ethereum address to link.
+  - `_steps`: The number of steps to link.
+- **Description**: Links an email to an address and steps.
+
+#### `SellerRegisteration`
+```solidity
+function SellerRegisteration(uint256 _creditCardNumber) public
+```
+- **Parameters**: 
+  - `_creditCardNumber`: The seller's credit card number for KYC.
+- **Description**: Registers a seller after verifying KYC.
+
+#### `list`
+```solidity
+function list(string memory _name, string memory _brand, string memory _image, uint256 _cost, uint256 _RB_Factor, uint256 _quantity) public payable
+```
+- **Parameters**: 
+  - `_name`: The name of the shoe.
+  - `_brand`: The brand of the shoe.
+  - `_image`: The image URL of the shoe.
+  - `_cost`: The cost of the shoe.
+  - `_RB_Factor`: The RunBro factor of the shoe.
+  - `_quantity`: The quantity of shoes to list.
+- **Description**: Lists a shoe for sale after verifying the seller and collecting platform fees.
+
+#### `buy`
+```solidity
+function buy(uint256 _id) public payable shoeValidity(_id)
+```
+- **Parameters**: 
+  - `_id`: The ID of the shoe to buy.
+- **Description**: Allows a registered user to buy a shoe. It updates the order count, shoe quantity, and handles payment to escrow.
+
+#### `userRegisteration`
+```solidity
+function userRegisteration(string memory _homeAddress) public
+```
+- **Parameters**: 
+  - `_homeAddress`: The home address of the user.
+- **Description**: Registers a user with their home address.
+
+#### `confirmPurchaseByBuyer`
+```solidity
+function confirmPurchaseByBuyer(uint256 _id) public
+```
+- **Parameters**: 
+  - `_id`: The ID of the order to confirm.
+- **Description**: Confirms the purchase by the buyer.
+
+#### `confirmPurchaseBySeller`
+```solidity
+function confirmPurchaseBySeller(uint256 _id) public
+```
+- **Parameters**: 
+  - `_id`: The ID of the order to confirm.
+- **Description**: Confirms the purchase by the seller and releases funds from escrow.
+
+#### `claimrbtokens`
+```solidity
+function claimrbtokens() public
+```
+- **Description**: Allows users to claim RunBro tokens after purchasing at least 3 shoes.
+
+#### `setUserHomeAddress`
+```solidity
+function setUserHomeAddress(string memory _homeAddress) public
+```
+- **Parameters**: 
+  - `_homeAddress`: The home address of the user.
+- **Description**: Sets the home address for the user.
+
+#### `selectShoe`
+```solidity
+function selectShoe(uint256 _id) public returns(uint256)
+```
+- **Parameters**: 
+  - `_id`: The ID of the shoe to select.
+- **Description**: Allows users to select a shoe they own.
+
+### View Functions
+- `getUserHomeAddress(address _account)`: Returns the home address of the user.
+- `getSlotIdOfUser(address _account)`: Returns the slot ID of the user.
+- `checkUserRegistraction(address _user)`: Checks if a user is registered.
+- `getShoeIdsOwnedByUser(address _user)`: Returns the IDs of shoes owned by the user.
+- `getListedShoeById(uint256 _id)`: Returns the details of a listed shoe.
+- `getTotalNumberOfListedShoe()`: Returns the total number of listed shoes.
+- `KYCdetailsOfLister(address _account)`: Returns the KYC details of a seller.
+- `hasPurchasedShoe(address _account, uint256 _shoeId)`: Checks if a user has purchased a specific shoe.
+- `getOrderTime(address _account, uint256 _orderId)`: Returns the order time for a specific order.
+- `getShoeRB_Factor(uint256 _shoeId)`: Returns the RunBro factor of a shoe.
+- `getBalance()`: Returns the contract's balance.
+- `getAddress(string calldata email)`: Returns the address linked to an email.
+
+---

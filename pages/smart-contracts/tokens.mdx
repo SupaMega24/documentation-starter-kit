@@ -1,0 +1,85 @@
+# RunBro Tokens
+
+---
+
+## RunBroToken.sol
+
+### Overview
+The `RunBroToken` contract is an ERC20 token with additional features from OpenZeppelin's libraries. It includes ownership control, permit functionality, and voting capabilities.
+
+### Inheritance
+The contract inherits from the following OpenZeppelin contracts:
+- `ERC20`: Standard ERC20 token implementation.
+- `Ownable`: Provides basic authorization control functions.
+- `ERC20Permit`: Adds permit functionality, allowing approvals via signatures.
+- `ERC20Votes`: Adds voting capabilities to the token.
+
+### Constructor
+```solidity
+constructor(uint256 initialSupply)
+```
+- **Parameters**: 
+  - `initialSupply`: The initial supply of tokens to be minted.
+- **Description**: Initializes the contract by setting the token name to "RunBroToken" and symbol to "RBT". It also mints the initial supply of tokens to the deployer's address.
+
+### Functions
+
+#### `safeTransfer`
+```solidity
+function safeTransfer(address to, uint256 amount) external onlyOwner
+```
+- **Parameters**: 
+  - `to`: The address to transfer tokens to.
+  - `amount`: The amount of tokens to transfer.
+- **Modifiers**: 
+  - `onlyOwner`: Only the contract owner can call this function.
+- **Description**: Transfers tokens to the specified address. This function is restricted to the contract owner.
+
+#### `_afterTokenTransfer`
+```solidity
+function _afterTokenTransfer(address from, address to, uint256 amount) internal override(ERC20, ERC20Votes)
+```
+- **Parameters**: 
+  - `from`: The address from which tokens are transferred.
+  - `to`: The address to which tokens are transferred.
+  - `amount`: The amount of tokens transferred.
+- **Description**: Hook that is called after any transfer of tokens. It ensures that the voting power is updated accordingly.
+
+#### `mint`
+```solidity
+function mint(address to, uint256 amount) public
+```
+- **Parameters**: 
+  - `to`: The address to mint tokens to.
+  - `amount`: The amount of tokens to mint.
+- **Description**: Mints new tokens to the specified address. This function can be called by anyone.
+
+#### `_mint`
+```solidity
+function _mint(address to, uint256 amount) internal override(ERC20, ERC20Votes)
+```
+- **Parameters**: 
+  - `to`: The address to mint tokens to.
+  - `amount`: The amount of tokens to mint.
+- **Description**: Internal function to mint new tokens. It ensures that the voting power is updated accordingly.
+
+#### `_burn`
+```solidity
+function _burn(address account, uint256 amount) internal override(ERC20, ERC20Votes)
+```
+- **Parameters**: 
+  - `account`: The address from which tokens are burned.
+  - `amount`: The amount of tokens to burn.
+- **Description**: Internal function to burn tokens. It ensures that the voting power is updated accordingly.
+
+### Notes
+- The contract uses OpenZeppelin's libraries to ensure security and standard compliance.
+- The `safeTransfer` function is restricted to the contract owner to prevent unauthorized transfers.
+- The `_afterTokenTransfer`, `_mint`, and `_burn` functions are overridden to ensure that the voting power is updated correctly.
+
+---
+
+
+
+
+
