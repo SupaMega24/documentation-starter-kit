@@ -1,0 +1,66 @@
+# Deploy Script
+
+---
+
+## DeployContracts.s.sol
+
+### Overview
+The `DeployContracts` script is used to deploy and initialize various smart contracts required for the RunBro ecosystem. This includes deploying the `RunBroToken`, `Escrow`, `WethRegistry`, `MarketPlace`, `GetStepsAPI`, `WethReward`, and DAO-related contracts (`Lock` and `RBGovernor`).
+
+### Inheritance
+The script inherits from:
+- `Script`: Provides functionality for running deployment scripts in Foundry.
+
+### Constants
+- `wethAddress`: The address of the WETH token contract on Sepolia (or Amoy, commented out).
+- `initialSupply`: The initial supply of RunBroTokens.
+- `initial_rbTokens_inPool`: The initial amount of RunBroTokens in the pool.
+- `initial_weth_inPool`: The initial amount of WETH in the pool.
+- `MIN_DELAY`: The minimum delay for the DAO timelock (1 hour).
+- `QUORUM_PERCENTAGE`: The quorum percentage required for DAO proposals (4%).
+- `VOTING_PERIOD`: The voting period for DAO proposals.
+- `VOTING_DELAY`: The delay before a proposal vote becomes active.
+
+### Variables
+- `seller`: The address of the seller.
+- `buyer`: The address of the buyer.
+- `owner`: The address of the contract owner.
+- `proposers`: An array of proposer addresses for the DAO.
+- `executors`: An array of executor addresses for the DAO.
+- `lock`: The `Lock` contract instance for the DAO.
+- `rbgovernor`: The `RBGovernor` contract instance for the DAO.
+
+### Functions
+
+#### `run`
+```solidity
+function run() external
+```
+- **Description**: Deploys and initializes the various contracts required for the RunBro ecosystem. It also sets up the DAO with the `Lock` and `RBGovernor` contracts.
+
+### Deployment Steps
+1. **Deploy RunBroToken**:
+   - Deploys the `RunBroToken` contract with the initial supply.
+2. **Deploy Escrow**:
+   - Deploys the `Escrow` contract.
+3. **Deploy WethRegistry**:
+   - Deploys the `WethRegistry` contract.
+4. **Deploy MarketPlace**:
+   - Deploys the `MarketPlace` contract with the addresses of `WethRegistry`, `WETH`, `Escrow`, and `RunBroToken`.
+5. **Deploy GetStepsAPI**:
+   - Deploys the `GetStepsAPI` contract with the address of `WethRegistry`.
+6. **Deploy WethReward**:
+   - Deploys the `WethReward` contract with the addresses of `WETH`, `MarketPlace`, `WethRegistry`, and `GetStepsAPI`.
+7. **Deploy DAO Contracts**:
+   - Deploys the `Lock` contract with the minimum delay, proposers, and executors.
+   - Deploys the `RBGovernor` contract with the `RunBroToken` and `Lock` contracts.
+8. **Setup DAO Roles**:
+   - Grants the proposer role to the `RBGovernor` contract.
+   - Grants the executor role to the zero address (open execution).
+   - Revokes the admin role from the deployer.
+
+### Console Logs
+- Logs the addresses of the deployed contracts for reference.
+
+---
+

@@ -1,0 +1,94 @@
+# Registry Pool
+
+---
+
+## WethRegistry.sol
+
+### Overview
+The `WethRegistry` contract manages user slots and distributes rewards based on the reserve balance. It uses Chainlink Automation to ensure timely distribution of rewards.
+
+### Inheritance
+The contract inherits from:
+- `AutomationCompatibleInterface`: Provides compatibility with Chainlink Automation.
+
+### Constructor
+No constructor is defined in this contract.
+
+### Structs
+- **Slot**: Represents a slot with attributes like slot ID, number of users, users, and reward fund.
+
+### Mappings
+- `s_slot`: Maps slot IDs to `Slot` structs.
+- `s_userSlotId`: Maps user addresses to their slot IDs.
+
+### Functions
+
+#### `_createSlot`
+```solidity
+function _createSlot(uint256 _slotId) internal
+```
+- **Parameters**: 
+  - `_slotId`: The ID of the slot to create.
+- **Description**: Creates a new slot with the given ID.
+
+#### `_addUserToSlot`
+```solidity
+function _addUserToSlot(uint256 _slotId, address _user) public
+```
+- **Parameters**: 
+  - `_slotId`: The ID of the slot to add the user to.
+  - `_user`: The address of the user to add.
+- **Description**: Adds a user to the specified slot. If the slot is full, a new slot is created.
+
+#### `_updateSlotCountAndCreateNewSlot`
+```solidity
+function _updateSlotCountAndCreateNewSlot() internal
+```
+- **Description**: Updates the slot count and creates a new slot if the current slot is full.
+
+#### `_updateReserveBalance`
+```solidity
+function _updateReserveBalance(uint256 _amount) public
+```
+- **Parameters**: 
+  - `_amount`: The amount to add to the reserve balance.
+- **Description**: Updates the reserve balance by adding the specified amount.
+
+#### `setRandomSlotData`
+```solidity
+function setRandomSlotData(uint256 _slotId, uint256 _numberOfUsers, address[] memory _users, uint256 _rewardFund) public
+```
+- **Parameters**: 
+  - `_slotId`: The ID of the slot.
+  - `_numberOfUsers`: The number of users in the slot.
+  - `_users`: The array of user addresses.
+  - `_rewardFund`: The reward fund for the slot.
+- **Description**: Sets random data for a slot.
+
+#### `distributeBalanceToSlot`
+```solidity
+function distributeBalanceToSlot() public
+```
+- **Description**: Distributes the reserve balance to all slots. This function is called by Chainlink Automation.
+
+#### `checkUpkeep`
+```solidity
+function checkUpkeep(bytes calldata /* checkData */) external view override returns (bool upkeepNeeded, bytes memory /* performData */)
+```
+- **Description**: Checks if upkeep is needed based on the distribution timestamp.
+
+#### `performUpkeep`
+```solidity
+function performUpkeep(bytes calldata /* performData */) external override
+```
+- **Description**: Performs upkeep by updating the distribution timestamp.
+
+### View Functions
+- `_getReserveBalance()`: Returns the reserve balance.
+- `_getSlotData(uint256 _slotId)`: Returns the data for a specific slot.
+- `_getUserSlotId(address _user)`: Returns the slot ID for a specific user.
+- `_getCurrentNumberOfSlots()`: Returns the current number of slots.
+- `rewardAllotmentToDifferentSlots()`: Returns the reward allotment to different slots.
+
+---
+

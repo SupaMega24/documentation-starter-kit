@@ -1,0 +1,88 @@
+# Reward Model
+
+---
+
+## WethRewardModel.sol
+
+### Overview
+The `WethReward` contract integrates with the `MarketPlace`, `GetStepsAPI`, and `WethRegistry` contracts to manage and distribute rewards based on user activity and steps data. It uses WETH for reward distribution.
+
+### Inheritance
+The contract does not inherit from any other contracts but interacts with several imported contracts:
+- `MarketPlace`
+- `GetStepsAPI`
+- `WethRegistry`
+- `IWETH` (interface)
+
+### Constructor
+```solidity
+constructor(address _wethToken, address _marketPlace, address _wethRegistry, address _getStepsApi)
+```
+- **Parameters**: 
+  - `_wethToken`: Address of the WETH token contract.
+  - `_marketPlace`: Address of the MarketPlace contract.
+  - `_wethRegistry`: Address of the WethRegistry contract.
+  - `_getStepsApi`: Address of the GetStepsAPI contract.
+- **Description**: Initializes the contract by setting the addresses of the WETH token, MarketPlace, WethRegistry, and GetStepsAPI contracts.
+
+### Mappings
+- `s_startingTime`: Maps user addresses to their starting time.
+- `s_userStepsAtMoment`: Maps user addresses and timestamps to their steps count.
+- `s_userSteps`: Maps user addresses to their total steps.
+- `s_stepShareOfUser`: Maps user addresses to their share of steps.
+- `s_totalStepsPerSlot`: Maps slot IDs to the total steps in that slot.
+- `s_userRewards`: Maps user addresses to their rewards.
+- `s_claimedReward`: Tracks whether a user has claimed their reward.
+
+### Functions
+
+#### `sendRequestToFetchSteps`
+```solidity
+function sendRequestToFetchSteps(string memory authToken) public
+```
+- **Parameters**: 
+  - `authToken`: Authorization token for the API.
+- **Description**: Sends a request to fetch the user's steps data from the external API.
+
+#### `recordFetchedSteps`
+```solidity
+function recordFetchedSteps(address _account) public
+```
+- **Parameters**: 
+  - `_account`: The address of the user.
+- **Description**: Records the fetched steps data for the user.
+
+#### `takeRewardBasedOnShoeId`
+```solidity
+function takeRewardBasedOnShoeId(uint256 _shoeId) checkIfUserAlreadyClaimedDailyReward(msg.sender) public
+```
+- **Parameters**: 
+  - `_shoeId`: The ID of the shoe.
+- **Description**: Allows the user to claim their reward based on the shoe ID.
+
+#### `_calculateRewardOfUserSteps`
+```solidity
+function _calculateRewardOfUserSteps(address _account, uint256 _shoeId) internal returns(uint256)
+```
+- **Parameters**: 
+  - `_account`: The address of the user.
+  - `_shoeId`: The ID of the shoe.
+- **Description**: Calculates the reward for the user's steps based on the shoe ID.
+
+#### `_calculateShareOfUsersStepsInSlot`
+```solidity
+function _calculateShareOfUsersStepsInSlot(address _account) internal returns(uint256)
+```
+- **Parameters**: 
+  - `_account`: The address of the user.
+- **Description**: Calculates the user's share of steps in their slot.
+
+### View Functions
+- `getRewardDataOfUsers(address _account)`: Returns the reward data for a specific user.
+
+### Modifiers
+- `checkIfUserAlreadyClaimedDailyReward(address _account)`: Ensures the user has not already claimed their daily reward.
+
+---
+
+

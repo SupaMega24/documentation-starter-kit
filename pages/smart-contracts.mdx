@@ -1,31 +1,100 @@
 # Solidity and Foundry
 
-## Scope
+---
 
-Discuss the general purpose and flow of the contracts.
+## Scope and Sequence
 
-## Essentials
+### Overview
+This project consists of a decentralized marketplace for buying and selling shoes, utilizing smart contracts to ensure secure transactions and reward users based on their physical activity. The system is built on Ethereum and leverages various libraries and tools for enhanced functionality.
 
-Lay it on the line!
+### Components
 
-### Contracts
+#### 1. **RunBroToken Contract**
+- **Purpose**: Implements an ERC20 token with additional features for ownership control, permit functionality, and voting capabilities.
+- **Key Features**:
+  - Minting and burning of tokens.
+  - Safe transfer restricted to the contract owner.
+  - Integration with OpenZeppelin's ERC20, Ownable, ERC20Permit, and ERC20Votes contracts.
 
-- RunBroToken.sol
-- Marketplace.sol
-- GoogleStepsApi.sol
-- Escrow.sol
+#### 2. **MarketPlace Contract**
+- **Purpose**: Facilitates the listing and purchasing of shoes using WETH and RunBroToken.
+- **Key Features**:
+  - User and seller registration.
+  - Mapping emails to steps and addresses.
+  - Managing orders and payments through escrow.
+  - Reward distribution based on user activity.
+
+#### 3. **GetStepsAPI Contract**
+- **Purpose**: Interacts with Chainlink Functions to fetch daily step count data from an external API.
+- **Key Features**:
+  - Fetching and storing daily steps data for users.
+  - Reward distribution based on steps data.
+  - Integration with Chainlink Functions for secure and reliable data fetching.
+
+#### 4. **Escrow Contract**
+- **Purpose**: Acts as an intermediary between buyers and sellers to ensure secure transactions.
+- **Key Features**:
+  - Holding funds in escrow until transaction completion.
+  - Releasing funds to the seller upon successful transaction.
+  - Preventing discrepancies between buyers and sellers.
+
+#### 5. **WethRegistry Contract**
+- **Purpose**: Manages user slots and distributes rewards based on the reserve balance.
+- **Key Features**:
+  - Creating and managing user slots.
+  - Updating reserve balance.
+  - Distributing rewards to slots using Chainlink Automation.
+
+#### 6. **WethReward Contract**
+- **Purpose**: Manages and distributes rewards based on user activity and steps data.
+- **Key Features**:
+  - Fetching and recording user steps data.
+  - Calculating and distributing rewards in WETH.
+  - Integrating with MarketPlace, GetStepsAPI, and WethRegistry contracts.
+
+#### 7. **DeployContracts Script**
+- **Purpose**: Deploys and initializes various smart contracts required for the RunBro ecosystem.
+- **Key Features**:
+  - Deploying RunBroToken, Escrow, WethRegistry, MarketPlace, GetStepsAPI, WethReward, and DAO-related contracts.
+  - Setting up DAO roles and permissions.
+
+### Sequence
+
+1. **User and Seller Registration**
+   - Users and sellers register on the platform, providing necessary details and undergoing KYC verification for sellers.
+
+2. **Listing Shoes**
+   - Sellers list shoes on the marketplace, specifying details such as name, brand, cost, and quantity.
+
+3. **Purchasing Shoes**
+   - Registered users can purchase listed shoes. Funds are held in escrow until the transaction is confirmed by both parties.
+
+4. **Fetching Steps Data**
+   - Users fetch their daily steps data from an external API using the GetStepsAPI contract. This data is stored and used for reward distribution.
+
+5. **Reward Distribution**
+   - Based on the steps data, users are rewarded with RunBroTokens. The reward distribution occurs daily at a specified time.
+
+6. **Transaction Confirmation**
+   - Both buyers and sellers confirm the transaction. Once confirmed, funds are released from escrow to the seller.
+
+7. **Claiming Rewards**
+   - Users who have purchased a certain number of shoes can claim additional RunBroTokens as rewards.
+
+8. **Slot Management and Reward Distribution**
+   - The WethRegistry contract manages user slots and distributes rewards based on the reserve balance using Chainlink Automation.
+
+9. **Reward Calculation and Distribution**
+   - The WethReward contract calculates and distributes rewards based on user activity and steps data.
+
+10. **Contract Deployment**
+    - The DeployContracts script deploys and initializes all necessary contracts, including setting up DAO roles and permissions.
+
+---
 
 
-### Pool and Rewards
-
-- WethRegistry.sol
-- WethRewardModel.sol
 
 
-### DAO
-
-- RBGoverner.sol
-- Lock.sol
 
 
 
