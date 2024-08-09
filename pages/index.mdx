@@ -1,6 +1,23 @@
-# Introduction
- 
-Welcome to 
-## Documentation
 
-The documentation 
+## About Our Project
+
+Welcome to our decentralized marketplace for buying and selling shoes, where we leverage cutting-edge blockchain technology to ensure secure transactions and reward users based on their physical activity. Our platform is built on Ethereum and utilizes a variety of powerful tools and libraries to enhance functionality and security.
+
+### Key Technologies and Tools
+
+#### OpenZeppelin
+We utilize OpenZeppelin's robust and secure libraries to implement key features in our smart contracts:
+- **ERC20**: Our `RunBroToken` is built using OpenZeppelin's ERC20 standard, ensuring compatibility and security.
+- **Ownable**: We use the Ownable module to manage ownership and access control in our contracts.
+- **ERC20Permit and ERC20Votes**: These extensions add permit functionality and voting capabilities to our tokens, enhancing their utility and governance.
+
+#### Chainlink
+Chainlink's decentralized oracle network provides reliable and secure data feeds and automation for our platform:
+- **Chainlink Functions**: Our `GetStepsAPI` contract uses Chainlink Functions to fetch daily step count data from external APIs, ensuring accurate and tamper-proof data.
+- **Chainlink Automation**: We leverage Chainlink Automation to manage periodic tasks such as reward distribution and slot management in our `WethRegistry` contract.
+
+### Our Vision
+We aim to create a seamless and secure marketplace that not only facilitates transactions but also incentivizes healthy living through activity-based rewards. By leveraging the power of blockchain technology and trusted tools like OpenZeppelin and Chainlink, we ensure that our platform is both secure and user-friendly.
+
+---
+

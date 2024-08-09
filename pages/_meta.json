@@ -2,11 +2,6 @@
   "index": "What's RunBro?",
   "smart-contracts": "Smart Contracts",
   "front-end": "Front End",
-  "marketing-design": "Marketing & Design",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
   "contact": {
     "title": "Contact ↗",
     "type": "page",
