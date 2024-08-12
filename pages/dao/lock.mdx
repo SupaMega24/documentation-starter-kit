@@ -1,0 +1,19 @@
+## Lock Contract
+
+### Overview
+The `Lock` contract is a timelock controller that manages the execution of proposals after a delay. It ensures that proposals are executed only after a specified delay, providing a security mechanism for the DAO.
+
+### Inheritance
+The contract inherits from:
+- `TimelockController`
+
+### Constructor
+```solidity
+constructor(uint256 minDelay, address[] memory proposers, address[] memory executors)
+```
+- **Parameters**: 
+  - `minDelay`: The minimum delay before executing a proposal.
+  - `proposers`: The list of addresses that can propose.
+  - `executors`: The list of addresses that can execute.
+- **Description**: Initializes the contract with the minimum delay, proposers, and executors.
+

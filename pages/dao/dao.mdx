@@ -1,0 +1,229 @@
+## RBGovernor Contract
+
+### Overview
+The `RBGovernor` contract is a governance contract that allows DAO members to propose and vote on the eligibility of sellers. It leverages OpenZeppelin's governance modules to provide a robust and secure governance framework.
+
+### Inheritance
+The contract inherits from several OpenZeppelin governance modules:
+- `Governor`
+- `GovernorSettings`
+- `GovernorCountingSimple`
+- `GovernorVotes`
+- `GovernorVotesQuorumFraction`
+- `GovernorTimelockControl`
+
+### Constructor
+```solidity
+constructor(IVotes _token, TimelockController _lock)
+```
+- **Parameters**: 
+  - `_token`: The governance token contract.
+  - `_lock`: The timelock controller contract.
+- **Description**: Initializes the contract with the governance token and timelock controller.
+
+### Structs
+- **RegistrationProposal**: Represents a proposal for seller registration with attributes like target address and approval status.
+
+### Mappings
+- `registrationProposals`: Maps proposal IDs to `RegistrationProposal` structs.
+- `nextRegistrationProposalId`: Tracks the next proposal ID.
+
+### Functions
+
+#### `proposeRewardEligibility`
+```solidity
+function proposeRewardEligibility(address target, string memory description) public returns (uint256)
+```
+- **Parameters**: 
+  - `target`: The address of the seller.
+  - `description`: The description of the proposal.
+- **Description**: Allows DAO members to propose the eligibility of a seller.
+
+#### `castVote`
+```solidity
+function castVote(uint256 proposalId, uint8 support) public override(IGovernor, Governor) returns (uint256)
+```
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+  - `support`: The vote (0 for no, 1 for yes).
+- **Description**: Allows DAO members to cast their vote on a proposal.
+
+#### `votingDelay`
+```solidity
+function votingDelay() public view override(IGovernor, GovernorSettings) returns (uint256)
+```
+- **Description**: Returns the voting delay.
+
+#### `votingPeriod`
+```solidity
+function votingPeriod() public view override(IGovernor, GovernorSettings) returns (uint256)
+```
+- **Description**: Returns the voting period.
+
+#### `quorum`
+```solidity
+function quorum(uint256 blockNumber) public view override(IGovernor, GovernorVotesQuorumFraction) returns (uint256)
+```
+- **Parameters**: 
+  - `blockNumber`: The block number.
+- **Description**: Returns the quorum for a given block number.
+
+#### `state`
+```solidity
+function state(uint256 proposalId) public view override(Governor, GovernorTimelockControl) returns (ProposalState)
+```
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+- **Description**: Returns the state of a proposal.
+
+#### `propose`
+```solidity
+function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description) public override(Governor, IGovernor) returns (uint256)
+```
+- **Parameters**: 
+  - `targets`: The target addresses.
+  - `values`: The values for the proposals.
+  - `calldatas`: The calldata for the proposals.
+  - `description`: The description of the proposal.
+- **Description**: Allows DAO members to propose new actions.
+
+#### `proposalThreshold`
+```solidity
+function proposalThreshold() public view override(Governor, GovernorSettings) returns (uint256)
+```
+- **Description**: Returns the proposal threshold.
+
+#### `_execute`
+```solidity
+function _execute(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash) internal override(Governor, GovernorTimelockControl)
+```
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+  - `targets`: The target addresses.
+  - `values`: The values for the proposals.
+  - `calldatas`: The calldata for the proposals.
+  - `descriptionHash`: The hash of the proposal description.
+- **Description**: Executes a proposal if it has succeeded.
+
+#### `isEligibleForRegistration`
+```solidity
+function isEligibleForRegistration(address target) public view returns (bool)
+```
+- **Parameters**: 
+  - `target`: The address of the seller.
+- **Description**: Checks if a seller is eligible for registration based on approved proposals.
+
+#### `_cancel`
+```solidity
+function _cancel(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash) internal override(Governor, GovernorTimelockControl) returns (uint256)
+```
+- **Parameters**: 
+  - `targets`: The target addresses.
+  - `values`: The values for the proposals.
+  - `calldatas`: The calldata for the proposals.
+  - `descriptionHash`: The hash of the proposal description.
+- **Description**: Cancels a proposal.
+
+#### `_executor`
+```solidity
+function _executor() internal view override(Governor, GovernorTimelockControl) returns (address)
+```
+- **Description**: Returns the executor address.
+
+#### `supportsInterface`
+```solidity
+function supportsInterface(bytes4 interfaceId) public view override(Governor, GovernorTimelockControl) returns (bool)
+```
+- **Parameters**: 
+  - `interfaceId`: The interface ID.
+- **Description**: Checks if the contract supports a given interface.
+
+---
+
+Would you like to proceed with any additional contracts or sections, or is there anything specific you'd like to adjust or add to this documentation? 😊
+[user](#message)
+Add this to the scope and sequence
+[assistant](#message)
+Sure! Here's the updated scope and sequence including the `RBGovernor` contract:
+
+---
+
+## Scope and Sequence
+
+### Overview
+This project consists of a decentralized marketplace for buying and selling shoes, utilizing smart contracts to ensure secure transactions and reward users based on their physical activity. The system is built on Ethereum and leverages various libraries and tools for enhanced functionality.
+
+### Components
+
+#### 1. **RunBroToken Contract**
+- **Purpose**: Implements an ERC20 token with additional features for ownership control, permit functionality, and voting capabilities.
+- **Key Features**:
+  - Minting and burning of tokens.
+  - Safe transfer restricted to the contract owner.
+  - Integration with OpenZeppelin's ERC20, Ownable, ERC20Permit, and ERC20Votes contracts.
+
+#### 2. **MarketPlace Contract**
+- **Purpose**: Facilitates the listing and purchasing of shoes using WETH and RunBroToken.
+- **Key Features**:
+  - User and seller registration.
+  - Mapping emails to steps and addresses.
+  - Managing orders and payments through escrow.
+  - Reward distribution based on user activity.
+
+#### 3. **GetStepsAPI Contract**
+- **Purpose**: Interacts with Chainlink Functions to fetch daily step count data from an external API.
+- **Key Features**:
+  - Fetching and storing daily steps data for users.
+  - Reward distribution based on steps data.
+  - Integration with Chainlink Functions for secure and reliable data fetching.
+
+#### 4. **Escrow Contract**
+- **Purpose**: Acts as an intermediary between buyers and sellers to ensure secure transactions.
+- **Key Features**:
+  - Holding funds in escrow until transaction completion.
+  - Releasing funds to the seller upon successful transaction.
+  - Preventing discrepancies between buyers and sellers.
+
+#### 5. **WethRegistry Contract**
+- **Purpose**: Manages user slots and distributes rewards based on the reserve balance.
+- **Key Features**:
+  - Creating and managing user slots.
+  - Updating reserve balance.
+  - Distributing rewards to slots using Chainlink Automation.
+
+#### 6. **WethReward Contract**
+- **Purpose**: Manages and distributes rewards based on user activity and steps data.
+- **Key Features**:
+  - Fetching and recording user steps data.
+  - Calculating and distributing rewards in WETH.
+  - Integrating with MarketPlace, GetStepsAPI, and WethRegistry contracts.
+
+#### 7. **DeployContracts Script**
+- **Purpose**: Deploys and initializes various smart contracts required for the RunBro ecosystem.
+- **Key Features**:
+  - Deploying RunBroToken, Escrow, WethRegistry, MarketPlace, GetStepsAPI, WethReward, and DAO-related contracts.
+  - Setting up DAO roles and permissions.
+
+#### 8. **RBGovernor Contract**
+- **Purpose**: Provides a governance framework for the DAO, allowing members to propose and vote on the eligibility of sellers.
+- **Key Features**:
+  - Proposing and voting on seller eligibility.
+  - Integrating with OpenZeppelin's governance modules for secure and robust governance.
+  - Managing proposals, votes, and execution of approved proposals.
+
+### Sequence
+
+1. **User and Seller Registration**
+   - Users and sellers register on the platform, providing necessary details and undergoing KYC verification for sellers.
+
+2. **Listing Shoes**
+   - Sellers list shoes on the marketplace, specifying details such as name, brand, cost, and quantity.
+
+3. **Purchasing Shoes**
+   - Registered users can purchase listed shoes. Funds are held in escrow until the transaction is confirmed by both parties.
+
+4. **Fetching Steps Data**
+   - Users fetch their daily steps data from an external API using the GetStepsAPI contract. This data is stored and used for reward distribution.
+
+5. **Reward Distribution**
+   - Based on the steps data, users are rewarded with RunBroTokens.
