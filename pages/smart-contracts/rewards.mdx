@@ -2,6 +2,39 @@
 
 ---
 
+**UPDATE 8/20/2024**
+
+## **wethRewardModel.sol - New Function**
+
+### **_calculateShareOfUserRBfactorInSlot**
+
+A new function `_calculateShareOfUserRBfactorInSlot` has been added, which calculates the share of the `rbRewardFund` that a user should receive based on their shoe’s `rbFactor`.
+
+```solidity
+function _calculateShareOfUserRBfactorInSlot(address _account, uint256 _shoeid) internal view returns(uint256) {
+    uint256 userSlotId = i_wethRegistry._getUserSlotId(_account);
+    (, , address[] memory usersInSlot, uint256[] memory rbfs, , uint256 rbRewardFund) = i_wethRegistry._getSlotData(userSlotId);
+
+    uint256 totalrbfs;
+    uint256 userrbfs = i_marketplace.getShoeRB_Factor(_shoeid);
+
+    for (uint256 i = 0; i < 100; i++) {
+        totalrbfs += rbfs[i];
+    }
+
+    return (userrbfs * rbRewardFund * SCALING_FACTOR) / totalrbfs;
+}
+```
+
+- **Purpose**: This function calculates a user's share of the reward based on the `rbFactor` of their shoe, relative to the total `rbFactors` within the slot.
+- **Inputs**:
+  - `_account`: The user's address.
+  - `_shoeid`: The ID of the shoe whose `rbFactor` will be used for the calculation.
+- **Logic**: It retrieves the user's slot ID and gathers slot data, including all users' `rbFactors`. It then calculates the user’s share of the `rbRewardFund` based on the ratio of their `rbFactor` to the total `rbFactors` in the slot.
+
+**END UPDATE**
+---
+
 ## WethRewardModel.sol
 
 ### Overview

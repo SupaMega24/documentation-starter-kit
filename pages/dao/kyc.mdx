@@ -1,0 +1,166 @@
+# KYC Contract
+
+The `KYC.sol` contract is responsible for handling the onboarding and registration of sellers onto the RunBRO platform via a decentralized KYC (Know Your Customer) process. The registration process is governed by the DAO members through proposals and voting mechanisms. The contract also integrates with the `RunBroToken` to check user token holdings.
+
+---
+
+### **Key Features**
+
+- **Proposal System**: DAO members can propose new sellers for registration on the platform. Proposals go through a voting process to determine whether the seller is approved.
+- **Voting System**: DAO members can cast their votes either in favor of or against a proposal. The result of the vote will decide if the user gets registered.
+- **Registration**: Once a proposal passes, the user is registered as a seller on the platform.
+
+---
+
+### **Contract Variables**
+
+- **sellerCount**: Tracks the total number of sellers who have submitted their details for registration.
+- **proposal_counter**: Tracks the total number of proposals created.
+- **sellerDetails**: A mapping that stores the TikTok URL or other relevant details for each seller by their address.
+- **proposalIdOfSeller**: A mapping that links each seller's address to their proposal ID.
+- **proposedAddressArray**: An array that stores all proposed addresses (sellers awaiting DAO approval).
+- **abc**: An array that stores all seller addresses that have submitted their details.
+- **proposals**: A mapping of proposal IDs to the `Proposal` struct containing proposal details.
+- **proposalCount**: A counter for the total number of proposals created.
+- **members**: A mapping that tracks which addresses are members of the DAO.
+- **hasVoted**: A nested mapping that tracks which DAO members have voted on which proposals.
+- **votingPeriod**: The duration for which voting remains open (default: 5 minutes).
+- **addUserToPlatform**: A mapping that stores the registration status of sellers after they pass the DAO voting process.
+- **rbToken**: A reference to the `RunBroToken` contract, used to check the token holdings of users.
+
+---
+
+### **Structs**
+
+- **Proposal**
+  - `proposer`: The address of the DAO member who proposed the user.
+  - `user`: The address of the user proposed for registration.
+  - `votesFor`: The number of votes in favor of the proposal.
+  - `votesAgainst`: The number of votes against the proposal.
+  - `deadline`: The timestamp after which voting ends.
+  - `executed`: Whether the proposal has been executed.
+  - `exists`: Whether the proposal exists.
+
+---
+
+### **Modifiers**
+
+- **`onlyMember`**: Ensures that only DAO members can call specific functions.
+- **`proposalExists`**: Ensures that the proposal exists before executing functions that depend on it.
+
+---
+
+### **Key Functions**
+
+#### **addDetails(string memory tiktokurl)**
+Allows a user to add their TikTok URL or other relevant details for registration. The user's address is added to the list of proposed sellers.
+
+- **Parameters**: 
+  - `tiktokurl`: A string representing the TikTok URL of the seller.
+
+#### **addMember(address _member)**
+Adds a new member to the DAO. Only existing members can add new members.
+
+- **Parameters**: 
+  - `_member`: The address of the new DAO member.
+
+#### **proposeUser()**
+Allows a DAO member to propose a new user (seller) for registration. Creates a proposal and starts the voting process for that proposal.
+
+- **Returns**: 
+  - `proposalId`: The ID of the newly created proposal.
+
+#### **vote(uint256 proposalId, bool support)**
+Allows a DAO member to vote on a proposal. The member can vote either in favor of (`support = true`) or against (`support = false`) the proposal.
+
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+  - `support`: A boolean indicating whether the voter supports the proposal.
+
+#### **queueProposal(uint256 proposalId)**
+After voting has ended and a proposal has passed, this function queues the proposal for execution.
+
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+
+#### **executeProposal(uint256 proposalId)**
+Executes the proposal, registering the user as a seller if the proposal passed.
+
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+
+#### **_registerUser(address _user)**
+An internal function that registers a user as a seller by updating the `addUserToPlatform` mapping.
+
+- **Parameters**: 
+  - `_user`: The address of the user being registered.
+
+---
+
+### **View Functions**
+
+#### **checkAmountOfRBT_UserHolds(address _account)**
+Checks the balance of `RunBroToken` that a user holds.
+
+- **Parameters**: 
+  - `_account`: The address of the user.
+- **Returns**: 
+  - The number of tokens held by the user.
+
+#### **checkIfSellerIsRegisteredOrNot(address _account)**
+Checks if a seller is registered on the platform.
+
+- **Parameters**: 
+  - `_account`: The address of the seller.
+- **Returns**: 
+  - A boolean indicating whether the seller is registered.
+
+#### **getAllTheElementsInTargetArray()**
+Returns all addresses in the `abc` array (addresses that have submitted their details).
+
+- **Returns**: 
+  - An array of addresses.
+
+#### **getsellersDetails(address _account)**
+Retrieves the TikTok URL or other details of a specific seller.
+
+- **Parameters**: 
+  - `_account`: The address of the seller.
+- **Returns**: 
+  - The TikTok URL or other details as a string.
+
+#### **getProposalIdOfSeller(address _account)**
+Retrieves the proposal ID associated with a specific seller.
+
+- **Parameters**: 
+  - `_account`: The address of the seller.
+- **Returns**: 
+  - The proposal ID.
+
+#### **getAllProposedAccounts()**
+Returns all the proposed seller addresses.
+
+- **Returns**: 
+  - An array of addresses.
+
+#### **getVotingStatus(uint256 proposalId)**
+Returns the voting status of a specific proposal, including the number of votes for, votes against, and whether the voting is still active.
+
+- **Parameters**: 
+  - `proposalId`: The ID of the proposal.
+- **Returns**: 
+  - `votesFor`: The number of votes in favor of the proposal.
+  - `votesAgainst`: The number of votes against the proposal.
+  - `isActive`: A boolean indicating if the voting period is still active.
+
+---
+
+### **Workflow Overview**
+
+1. **User Submits Details**: A user submits their details (e.g., TikTok URL) for registration.
+2. **DAO Member Proposes User**: A DAO member proposes the user for registration by creating a proposal.
+3. **DAO Members Vote**: DAO members vote on the proposal.
+4. **Proposal Queued**: If the proposal passes, it is queued for execution.
+5. **User Registered**: After execution, the user is registered as a seller on the platform.
+
+This decentralized process ensures that the DAO governs the onboarding of sellers, making the process transparent and community-driven.

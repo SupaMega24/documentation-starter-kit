@@ -2,6 +2,43 @@
 
 ---
 
+**UPDATE 8/20/2024**
+
+## **wethRegistry.sol - Updates**
+
+### **1. Changes to `distributeBalancetoSlot`**
+
+The function `distributeBalancetoSlot` now distributes funds in an **80:20 ratio**:
+
+- **80%** of the funds are allocated as rewards based on user steps.
+- **20%** of the funds are allocated as rewards based on the `rbFactor` of the user's shoe.
+
+This change is crucial as it introduces a dual reward mechanism, rewarding both user activity and the attributes of their digital items (shoes).
+
+### **2. Updated `Slot` Struct**
+
+The `Slot` struct has been updated with two new members to support the reward distribution changes:
+
+```solidity
+struct Slot {
+    uint256 slotId;
+    uint256 numberOfUsers;
+    address[] users;
+    uint256[] rbfs;       // Array storing rbFactors for users in the slot
+    uint256 rewardFund;    // Fund allocated for step-based rewards
+    uint256 rbRewardFund;  // Fund allocated for rbFactor-based rewards
+}
+```
+
+- **`rbfs`**: An array that holds the `rbFactor` values of the users in the slot.
+- **`rbRewardFund`**: The amount of funds dedicated to rewards based on `rbFactor`.
+
+These two new members allow for a separate fund distribution based on the user's shoe `rbFactor`.
+
+**END UPDATE**
+
+---
+
 ## WethRegistry.sol
 
 ### Overview
